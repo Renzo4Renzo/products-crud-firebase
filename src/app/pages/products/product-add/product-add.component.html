@@ -1,0 +1,110 @@
+<div class="card mt-2" (ngSubmit)="onSave()" [formGroup]="productForm">
+  <div class="card-header"><i class="bi bi-bag-plus"></i> Create Product</div>
+  <div class="card-body">
+    <form>
+      <!-- TITLE -->
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="titleInput"
+          formControlName="title"
+        />
+        <label for="titleInput">Product</label>
+      </div>
+
+      <!-- IMAGE -->
+      <!-- <div class="mb-3">
+        <img
+          src="../../../../assets/images/default.png"
+          class="img-border mx-auto d-block"
+          alt="No image"
+          width="260px"
+          formControlName="image"
+        />
+        <div class="img-actions mx-auto">
+          <button
+            type="button"
+            class="btn btn-dark img-action-button"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            title="Upload image"
+          >
+            <i class="bi bi-image me-1"></i>
+            UPLOAD
+          </button>
+          <button
+            type="button"
+            class="btn btn-dark img-action-button"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            title="Delete image"
+          >
+            <i class="bi bi-trash me-1"></i>
+            DELETE
+          </button>
+        </div>
+      </div> -->
+
+      <!-- DESCRIPTION -->
+      <div class="form-floating mb-3">
+        <textarea
+          class="form-control"
+          id="descriptionArea"
+          style="height: 150px"
+          formControlName="description"
+        ></textarea>
+        <label for="descriptionArea"
+          >Description
+          <span class="label-cursive text-success">- Optional</span></label
+        >
+      </div>
+
+      <!-- PRICE -->
+      <div class="form-floating mb-3">
+        <input
+          id="priceInput"
+          type="number"
+          min="0.01"
+          step="0.01"
+          pattern="[0-9]+([.][0-9]{1,2}|[0-9]?)"
+          class="form-control"
+          formControlName="price"
+        />
+        <label for="priceInput">Price (PEN)</label>
+      </div>
+
+      <!-- ACTIVE -->
+      <div class="form-check form-switch mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="switchActive"
+          formControlName="active"
+        />
+        <label class="form-check-label" for="switchActive">Active</label>
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="btn-group">
+        <button
+          type="submit"
+          class="btn btn-success"
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          title="Save Changes"
+        >
+          <i class="bi bi-save-fill me-1"></i>
+          <span class="d-sm-inline-block d-none">Save Changes</span>
+          <span class="d-sm-none d-inline-block">Save</span>
+        </button>
+        <button type="button" class="btn btn-dark" (click)="returnToList()">
+          <i class="bi bi-box-arrow-left me-1"></i>
+          <span class="d-sm-inline-block d-none">Back to List</span>
+          <span class="d-sm-none d-inline-block">Back</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

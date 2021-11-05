@@ -1,0 +1,41 @@
+.table > :not(:first-child) {
+  border-top: none;
+}
+thead > tr > th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+tbody > tr > th,
+td {
+  max-width: 25vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.action-icons {
+  display: flex;
+  justify-content: center;
+  & > i {
+    padding: 0px 2px;
+  }
+}
+.th-padding {
+  padding: 20px 0px;
+}
+
+.td-padding {
+  padding: 20px 0px;
+}
+
+.form-control {
+  margin-right: 0.5rem;
+  border: 1px solid #ced4da;
+}
+
+.product-inactive-switch {
+  margin: auto 10px auto 0;
+}
+
+.product-inactive-flex {
+  display: flex;
+  justify-content: flex-end;
+}

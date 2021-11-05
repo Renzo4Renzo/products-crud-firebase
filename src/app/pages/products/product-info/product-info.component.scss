@@ -1,0 +1,32 @@
+.card-header > i {
+  vertical-align: middle;
+}
+button > i {
+  vertical-align: middle;
+}
+.btn-group {
+  width: 100%;
+  .btn-action {
+    margin-right: auto;
+  }
+}
+li {
+  font-weight: bold;
+}
+
+.info-p {
+  text-transform: none;
+  letter-spacing: 1px;
+  font-weight: normal;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-item {
+  border: none;
+}
+
+.img-border {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}

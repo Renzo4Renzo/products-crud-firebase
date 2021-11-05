@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "products-crud-firebase-9a649": {
+      "hosting": {
+        "products-crud-firebase": [
+          "products-crud-firebase-9a649"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "products-crud-firebase-9a649"
+  }
+}

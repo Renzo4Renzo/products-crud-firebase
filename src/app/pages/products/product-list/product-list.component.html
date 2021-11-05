@@ -1,0 +1,92 @@
+<div class="d-flex">
+  <input
+    id="product-search"
+    class="form-control my-2 me-sm-2"
+    type="text"
+    placeholder="Search"
+  />
+  <button class="btn btn-dark my-2 my-sm-2" (click)="searchProducts()">
+    Search
+  </button>
+</div>
+
+<div class="form-check form-switch my-2 product-inactive-flex">
+  <input
+    class="form-check-input product-inactive-switch"
+    type="checkbox"
+    role="switch"
+    id="switchActive"
+    (change)="updateProductList()"
+  />
+  <label class="form-check-label" for="switchActive">
+    <span class="d-sm-inline-block d-none">Include Inactive Products</span>
+    <span class="d-sm-none d-inline-block">Include Inactive</span></label
+  >
+</div>
+
+<table class="table table-hover text-center">
+  <thead>
+    <tr class="table-dark align-middle">
+      <th scope="col" class="th-padding">Product</th>
+      <th scope="col" class="th-padding">Price</th>
+      <th scope="col" class="d-sm-table-cell d-none th-padding">
+        Last Modified
+      </th>
+      <th scope="col" class="th-padding">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="table-secondary align-middle" *ngFor="let item of productList">
+      <th scope="row" class="td-padding">{{ item.title }}</th>
+      <td class="td-padding">{{ item.price | number: "1.2-2" }}</td>
+      <td class="d-sm-table-cell d-none td-padding">
+        {{
+          item.history[item.history.length - 1].date | date: "MMM d, y - h:mm a"
+        }}
+      </td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-info btn-md m-1 d-sm-table-cell d-none"
+          (click)="seeProduct(item)"
+        >
+          <i class="bi bi-info-circle"></i>
+          Info
+        </button>
+        <button
+          type="button"
+          class="btn btn-success btn-md m-1 d-sm-table-cell d-none"
+          (click)="editProduct(item)"
+        >
+          <i class="bi bi-pencil-square"></i>
+          Edit
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger btn-md m-1 d-sm-table-cell d-none"
+          (click)="deleteProduct(item.id)"
+        >
+          <i class="bi bi-trash"></i>
+          Delete
+        </button>
+        <div class="action-icons">
+          <i
+            class="bi bi-info-circle info-btn d-sm-none d-table-cell"
+            title="See Detail"
+            (click)="seeProduct(item)"
+          ></i>
+          <i
+            class="bi bi-pencil-square success-btn d-sm-none d-table-cell"
+            title="Edit"
+            (click)="editProduct(item)"
+          ></i>
+          <i
+            class="bi bi-trash-fill danger-btn d-sm-none d-table-cell"
+            title="Delete"
+            (click)="deleteProduct(item.id)"
+          ></i>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

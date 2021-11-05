@@ -1,0 +1,130 @@
+<div class="card mt-2">
+  <div class="card-header"><i class="bi bi-info-circle"></i> Product Info</div>
+  <div class="card-body">
+    <ul class="list-group">
+      <li class="list-group-item info-item">
+        Product
+        <p class="info-p">{{ product.title }}</p>
+      </li>
+      <!-- <li class="list-group-item info-item">
+        Image
+        <img
+          src="../../../../assets/images/default.png"
+          class="img-border d-block my-1"
+          alt="No image"
+          width="200px"
+        />
+      </li> -->
+      <li class="list-group-item info-item">
+        Description
+        <p class="info-p" *ngIf="product.description">
+          {{ product.description }}
+        </p>
+        <p class="info-p text-muted" *ngIf="!product.description">
+          No description available
+        </p>
+      </li>
+      <li class="list-group-item info-item">
+        Price
+        <p class="info-p">{{ product.price | number: "1.2-2" }}</p>
+      </li>
+      <li class="list-group-item info-item">
+        Status
+        <p class="info-p">
+          <span class="badge bg-success rounded-pill" *ngIf="product.active"
+            >Active</span
+          >
+          <span class="badge bg-dark rounded-pill" *ngIf="!product.active"
+            >Inactive</span
+          >
+        </p>
+      </li>
+      <li
+        class="
+          list-group-item
+          info-item
+          d-flex
+          justify-content-between
+          align-items-center
+        "
+      >
+        <div>
+          Last Modified
+          <p class="info-p">
+            {{ lastModified | date: "MMM d, y - h:mm:ss a" }}
+          </p>
+        </div>
+        <a
+          data-bs-toggle="modal"
+          data-bs-target="#historyModal"
+          id="history"
+          class="product-link"
+          >History</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- BUTTONS -->
+<div class="btn-group my-3">
+  <button
+    type="submit"
+    class="btn btn-success"
+    data-bs-toggle="tooltip"
+    data-bs-placement="bottom"
+    title="Edit Product"
+    (click)="editProduct()"
+  >
+    <i class="bi bi-pencil me-1"></i>
+    <span class="d-sm-inline-block d-none">Edit Product</span>
+    <span class="d-sm-none d-inline-block">Edit</span>
+  </button>
+  <button type="button" class="btn btn-dark" (click)="returnToList()">
+    <i class="bi bi-box-arrow-left me-1"></i>
+    <span class="d-sm-inline-block d-none">Back to List</span>
+    <span class="d-sm-none d-inline-block">Back</span>
+  </button>
+</div>
+
+<!-- HISTORY MODAL -->
+<div
+  class="modal fade"
+  id="historyModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">HISTORY</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li
+            class="list-group-item history-item"
+            *ngFor="let item of product.history.reverse()"
+          >
+            <p class="info-p">
+              <i
+                class="bi me-1"
+                [ngClass]="item.type == 'c' ? 'bi-bag-plus' : 'bi-pencil'"
+              ></i>
+              <span *ngIf="item.type == 'c'">Created at </span>
+              <span *ngIf="item.type == 'u'">Updated at </span>
+              <b>{{ item.date | date: "MMM d, y - h:mm:ss a" }}</b> by
+              <b>{{ item.user }}</b>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
