@@ -2,6 +2,7 @@ import { formatNumber } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/models/product.interface';
 import { ProductsService } from '../products.service';
 
@@ -11,28 +12,23 @@ import { ProductsService } from '../products.service';
   styleUrls: ['./product-edit.component.scss'],
 })
 export class ProductEditComponent implements OnInit {
-  navigationExtras: NavigationExtras = {
-    state: {
-      checked: null,
-    },
-  };
-
   product: Product;
   lastModified: string = '';
   productForm!: FormGroup;
   private isNumber = '[0-9]+([.][0-9]{1,2}|[0-9]?)';
+  hasChange: boolean = false;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private productService: ProductsService
+    private productService: ProductsService,
+    private toastr: ToastrService
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.product = navigation?.extras?.state?.product;
-    this.navigationExtras.state!.checked = navigation?.extras?.state?.checked;
     //console.log('this.product: ', this.product);
     if (typeof this.product === 'undefined') {
-      this.router.navigate(['product-list'], this.navigationExtras);
+      this.router.navigate(['product-list']);
     } else {
       this.setLastModified();
       this.initForm();
@@ -41,12 +37,13 @@ export class ProductEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (typeof this.product === 'undefined') {
-      this.router.navigate(['product-list'], this.navigationExtras);
+      this.router.navigate(['product-list']);
     } else {
       this.productForm.patchValue(this.product);
       this.productForm.patchValue({
         price: formatNumber(this.product.price, 'en-US', '1.2-2'),
       });
+      this.onCreateGroupFormValueChange();
     }
   }
 
@@ -56,7 +53,7 @@ export class ProductEditComponent implements OnInit {
   }
 
   returnToList() {
-    this.router.navigate(['product-list'], this.navigationExtras);
+    this.router.navigate(['product-list']);
   }
 
   onSave() {
@@ -71,17 +68,32 @@ export class ProductEditComponent implements OnInit {
       this.productService
         .updateProduct(product, this.product.id)
         .then((res) => {
-          console.log(res); //TODO: SweetAlert2
+          this.showMessage(0, 'Your product was updated!', String(res));
+          this.router.navigate(['product-list']);
         })
         .catch((error) => {
-          console.log('Error:', error);
+          this.showMessage(1, 'Your product was NOT updated!', 'Error');
+          console.log('Error:', error); //For developers
         });
       /* this.productForm.reset();
       this.initForm(); */
-      this.router.navigate(['product-list'], this.navigationExtras);
     } else {
-      console.log('El formulario no es válido!'); //TODO: SweetAlert2
+      this.showMessage(1, 'Not all fields have valid data!', 'Error');
     }
+  }
+
+  deleteProduct(productId: string) {
+    //console.log(productId);
+    this.productService
+      .deleteProduct(productId)
+      .then((res: any) => {
+        this.showMessage(0, 'Your product was deleted!', String(res));
+        this.router.navigate(['product-list']);
+      })
+      .catch((error) => {
+        this.showMessage(1, 'Your product was NOT deleted!', 'Error');
+        console.log('Error:', error); //For developers
+      });
   }
 
   private initForm(): void {
@@ -89,8 +101,42 @@ export class ProductEditComponent implements OnInit {
       title: ['', [Validators.required]],
       /* image: [''], */
       description: [''],
-      price: ['', [Validators.required, Validators.pattern(this.isNumber)]],
+      price: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(this.isNumber),
+          Validators.min(0.01),
+        ],
+      ],
       active: ['', [Validators.required]],
     });
+  }
+
+  isValidField(field: any): string {
+    const validatedField = this.productForm.get(field);
+    if (validatedField?.touched) {
+      if (!validatedField?.valid) return 'is-invalid';
+      else return 'is-valid';
+    } else return '';
+  }
+
+  onCreateGroupFormValueChange() {
+    const initialValue = this.productForm.value;
+    this.productForm.valueChanges.subscribe((value) => {
+      this.hasChange = Object.keys(initialValue).some(
+        (key) => this.productForm.value[key] != initialValue[key]
+      );
+    });
+  }
+
+  showMessage(type: number, message: string, title: string) {
+    var options = {
+      closeButton: true,
+    };
+    if (type == 0) this.toastr.success(message, title, options);
+    else if (type == 1) this.toastr.error(message, title, options);
+    else if (type == 2) this.toastr.warning(message, title, options);
+    else if (type == 3) this.toastr.info(message, title, options);
   }
 }

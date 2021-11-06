@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { Product } from 'src/app/models/product.interface';
 import { ProductsService } from '../products.service';
 
+import { Global } from 'src/app/common/global';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
@@ -13,76 +16,81 @@ export class ProductListComponent implements OnInit {
   navigationExtras: NavigationExtras = {
     state: {
       product: null,
-      checked: false,
     },
   };
   productList: Array<Product> = [];
-  checked: boolean = false;
-  searchString: string = '';
+  loadingList: boolean = false;
+  emptyList: boolean = false;
 
-  constructor(private router: Router, private productService: ProductsService) {
-    const navigation = this.router.getCurrentNavigation();
-    this.checked = navigation?.extras?.state?.checked;
-  }
+  constructor(
+    private router: Router,
+    private productService: ProductsService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     (<HTMLInputElement>document.getElementById('switchActive')).checked =
-      this.checked;
+      Global.productCheckStatus;
+    (<HTMLInputElement>document.getElementById('product-search')).value =
+      Global.productSearchString;
     this.updateProductList();
   }
 
   updateProductList() {
-    this.checked = (<HTMLInputElement>(
+    this.emptyList = false;
+    this.loadingList = true;
+    Global.productCheckStatus = (<HTMLInputElement>(
       document.getElementById('switchActive')
     )).checked;
-    if (this.checked) {
-      this.getProducts(true);
-    } else {
-      this.getProducts(false);
-    }
-  }
-
-  getProducts(showInactive: boolean) {
-    if (showInactive) {
-      this.productService
-        .getAllProducts()
-        .then((res: any) => {
-          var preList: Array<Product> = [];
-          res.forEach((doc: any) => {
-            let id = doc.id;
-            preList.push({ id, ...doc.data() });
-          });
-          this.sortProductList(preList);
-          this.productList = preList;
-          //console.log('this.productList: ', this.productList);
-        })
-        .catch((error) => {
-          console.log('Error:', error); //TODO: SweetAlert2
-        });
-    } else {
-      this.productService
-        .getActiveProducts()
-        .then((res: any) => {
-          var preList: Array<Product> = [];
-          res.forEach((doc: any) => {
-            let id = doc.id;
-            preList.push({ id, ...doc.data() });
-          });
-          this.sortProductList(preList);
-          this.productList = preList;
-          //console.log('this.productList: ', this.productList);
-        })
-        .catch((error) => {
-          console.log('Error:', error); //TODO: SweetAlert2
-        });
-    }
-  }
-
-  searchProducts() {
-    this.searchString = (<HTMLInputElement>(
+    Global.productSearchString = (<HTMLInputElement>(
       document.getElementById('product-search')
-    )).value;
-    console.log('this.searchString: ', this.searchString);
+    )).value
+      .trim()
+      .toUpperCase();
+    //console.log(Global.productSearchString);
+    let type = 0;
+    if (Global.productCheckStatus) type = 1;
+    this.getProducts(type);
+  }
+
+  getProducts(type: number) {
+    let doSearch = false;
+    if (Global.productSearchString != '') {
+      doSearch = true;
+    }
+    this.productService
+      .getProducts(type)
+      .then((res: any) => {
+        var preList: Array<Product> = [];
+        res.forEach((doc: any) => {
+          //console.log(doc.data());
+          let id = doc.id;
+          if (doSearch) {
+            let docData = doc.data().title;
+            let docPrice = Number.parseFloat(doc.data().price)
+              .toFixed(2)
+              .toString();
+            if (
+              docData.includes(Global.productSearchString) ||
+              docPrice.includes(Global.productSearchString)
+            ) {
+              preList.push({ id, ...doc.data() });
+            }
+          } else preList.push({ id, ...doc.data() });
+        });
+        this.sortProductList(preList);
+        this.productList = preList;
+        if (this.productList.length == 0) {
+          this.emptyList = true;
+        }
+        //console.log('this.productList: ', this.productList);
+        this.loadingList = false;
+      })
+      .catch((error) => {
+        this.showMessage(1, "Couldn't retrieve product list!", 'Error');
+        console.log('Error:', error); //For developers
+        this.loadingList = false;
+      });
   }
 
   sortProductList(array: Array<Product>) {
@@ -95,30 +103,35 @@ export class ProductListComponent implements OnInit {
 
   seeProduct(item: any) {
     this.navigationExtras.state!.product = item;
-    this.navigationExtras.state!.checked = (<HTMLInputElement>(
-      document.getElementById('switchActive')
-    )).checked;
     this.router.navigate(['product-info'], this.navigationExtras);
   }
 
   editProduct(item: any) {
     this.navigationExtras.state!.product = item;
-    this.navigationExtras.state!.checked = (<HTMLInputElement>(
-      document.getElementById('switchActive')
-    )).checked;
     this.router.navigate(['product-edit'], this.navigationExtras);
   }
 
   deleteProduct(productId: string) {
-    console.log(productId);
+    //console.log(productId);
     this.productService
       .deleteProduct(productId)
       .then((res: any) => {
-        console.log(res);
+        this.showMessage(0, 'Your product was deleted!', String(res));
         this.updateProductList();
       })
       .catch((error) => {
-        console.log('Error:', error); //TODO: SweetAlert2
+        this.showMessage(1, 'Your product was NOT deleted!', 'Error');
+        console.log('Error:', error); //For developers
       });
+  }
+
+  showMessage(type: number, message: string, title: string) {
+    var options = {
+      closeButton: true,
+    };
+    if (type == 0) this.toastr.success(message, title, options);
+    else if (type == 1) this.toastr.error(message, title, options);
+    else if (type == 2) this.toastr.warning(message, title, options);
+    else if (type == 3) this.toastr.info(message, title, options);
   }
 }

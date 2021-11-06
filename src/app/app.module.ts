@@ -10,6 +10,9 @@ import { environment } from '../environments/environment';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
   imports: [
@@ -18,6 +21,8 @@ import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
     HeaderModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({ timeOut: 8000, autoDismiss: true }),
   ],
   providers: [],
   bootstrap: [AppComponent],

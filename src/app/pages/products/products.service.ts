@@ -22,46 +22,33 @@ export class ProductsService {
 
   constructor(private firestore: Firestore) {}
 
-  getAllProducts() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let getProductQuery = query(collection(this.firestore, 'products'));
-        const querySnapshot = await getDocs(getProductQuery);
-        resolve(querySnapshot);
-      } catch (error: any) {
-        reject(error.message);
-      }
-    });
-  }
-
-  getActiveProducts() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let getProductQuery = query(
-          collection(this.firestore, 'products'),
-          where('active', '==', true)
-        );
-        const querySnapshot = await getDocs(getProductQuery);
-        resolve(querySnapshot);
-      } catch (error: any) {
-        reject(error.message);
-      }
-    });
-  }
-
-  searchProducts(searchString: string) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let getProductQuery = query(
-          collection(this.firestore, 'products'),
-          where('title', 'array-contains', searchString)
-        );
-        const querySnapshot = await getDocs(getProductQuery);
-        resolve(querySnapshot);
-      } catch (error: any) {
-        reject(error.message);
-      }
-    });
+  getProducts(type: number /*, searchString: string*/) {
+    if (type == 1) {
+      //Gets ALL Products
+      return new Promise(async (resolve, reject) => {
+        try {
+          let getProductQuery = query(collection(this.firestore, 'products'));
+          const querySnapshot = await getDocs(getProductQuery);
+          resolve(querySnapshot);
+        } catch (error: any) {
+          reject(error.message);
+        }
+      });
+    } else {
+      //Gets ACTIVE Products
+      return new Promise(async (resolve, reject) => {
+        try {
+          let getProductQuery = query(
+            collection(this.firestore, 'products'),
+            where('active', '==', true)
+          );
+          const querySnapshot = await getDocs(getProductQuery);
+          resolve(querySnapshot);
+        } catch (error: any) {
+          reject(error.message);
+        }
+      });
+    }
   }
 
   saveProduct(product: Product) {

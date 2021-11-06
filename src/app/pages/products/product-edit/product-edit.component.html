@@ -6,11 +6,19 @@
       <div class="form-floating mb-3">
         <input
           type="text"
-          class="form-control"
+          class="form-control uppercase-text"
           id="titleInput"
+          autocomplete="off"
           formControlName="title"
+          [class]="isValidField('title')"
         />
         <label for="titleInput">Product</label>
+        <div
+          class="invalid-feedback"
+          *ngIf="productForm.get('title')?.errors?.required"
+        >
+          This field is required.
+        </div>
       </div>
 
       <!-- IMAGE -->
@@ -53,6 +61,7 @@
           id="descriptionArea"
           style="height: 150px"
           formControlName="description"
+          [class]="isValidField('description')"
         ></textarea>
         <label for="descriptionArea"
           >Description
@@ -69,10 +78,30 @@
           step="0.01"
           pattern="[0-9]+([.][0-9]{1,2}|[0-9]?)"
           class="form-control"
+          autocomplete="off"
           formControlName="price"
+          [class]="isValidField('price')"
           value="{{ product.price | number: '1.2-2' }}"
         />
         <label for="priceInput">Price (PEN)</label>
+        <div
+          class="invalid-feedback"
+          *ngIf="productForm.get('price')?.errors?.required"
+        >
+          This field is required.
+        </div>
+        <div
+          class="invalid-feedback"
+          *ngIf="productForm.get('price')?.errors?.min"
+        >
+          Mininum Price allowed is 0.01.
+        </div>
+        <div
+          class="invalid-feedback"
+          *ngIf="productForm.get('price')?.errors?.pattern"
+        >
+          Price must contain between 0-2 decimals.
+        </div>
       </div>
 
       <!-- ACTIVE -->
@@ -91,7 +120,12 @@
       <div class="btn-group">
         <button
           type="submit"
-          class="btn btn-success"
+          class="btn"
+          [class]="
+            hasChange && productForm.valid
+              ? 'btn-success'
+              : 'btn-success disabled'
+          "
           data-bs-toggle="tooltip"
           data-bs-placement="bottom"
           title="Save Changes"
@@ -99,6 +133,15 @@
           <i class="bi bi-save-fill me-1"></i>
           <span class="d-sm-inline-block d-none">Save Changes</span>
           <span class="d-sm-none d-inline-block">Save</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="deleteProduct(product.id)"
+        >
+          <i class="bi bi-trash me-1"></i>
+          <span class="d-sm-inline-block d-none">Delete Product</span>
+          <span class="d-sm-none d-inline-block">Delete</span>
         </button>
         <button type="button" class="btn btn-dark" (click)="returnToList()">
           <i class="bi bi-box-arrow-left me-1"></i>
@@ -164,7 +207,7 @@
             <p>
               <i
                 class="bi me-1"
-                [ngClass]="item.type == 'c' ? 'bi-bag-plus' : 'bi-pencil'"
+                [class]="item.type == 'c' ? 'bi-bag-plus' : 'bi-pencil'"
               ></i>
               <span *ngIf="item.type == 'c'">Created at </span>
               <span *ngIf="item.type == 'u'">Updated at </span>

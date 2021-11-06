@@ -11,7 +11,6 @@ export class ProductInfoComponent implements OnInit {
   navigationExtras: NavigationExtras = {
     state: {
       product: null,
-      checked: null,
     },
   };
 
@@ -21,9 +20,8 @@ export class ProductInfoComponent implements OnInit {
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
     this.product = navigation?.extras?.state?.product;
-    this.navigationExtras.state!.checked = navigation?.extras?.state?.checked;
     if (typeof this.product === 'undefined') {
-      this.router.navigate(['product-list'], this.navigationExtras);
+      this.router.navigate(['product-list']);
     } else {
       this.setLastModified();
     }
@@ -42,10 +40,10 @@ export class ProductInfoComponent implements OnInit {
   }
 
   deleteProduct() {
-    this.router.navigate(['product-list'], this.navigationExtras);
+    this.router.navigate(['product-list']);
   }
 
   returnToList() {
-    this.router.navigate(['product-list'], this.navigationExtras);
+    this.router.navigate(['product-list']);
   }
 }

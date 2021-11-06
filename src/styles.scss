@@ -4,6 +4,8 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~bootswatch/dist/lux/bootswatch";
 
+@import "~ngx-toastr/toastr";
+
 .info-btn {
   color: $blue;
 }
@@ -40,4 +42,12 @@
 
 textarea {
   resize: none;
+}
+
+.uppercase-text {
+  text-transform: uppercase;
+}
+
+.hide-component {
+  display: none !important;
 }
