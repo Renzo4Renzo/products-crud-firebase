@@ -14,20 +14,43 @@ b {
   color: #55595c;
 }
 
-.img-actions {
-  width: 260px;
-}
-
-.img-action-button {
-  width: 50%;
-}
-
-.img-border {
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-bottom: none;
-}
-
 .btn-save {
   display: flex;
   justify-content: center;
 }
+
+/*BUTTON MARGIN: START*/
+@media (min-width: 576px) and (max-width: 767px) {
+  .btn-margin-right {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 382px) and (max-width: 575px) {
+  .btn-margin-right {
+    margin-right: 0.25rem;
+  }
+}
+
+@media (min-width: 370px) and (max-width: 381px) {
+  .btn-margin-right {
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 369px) {
+  .btn-margin-right {
+    margin-right: 0;
+  }
+}
+/*BUTTON MARGIN: END*/
+
+/*IMAGE: START*/
+#hiddenImageEdit {
+  display: none;
+}
+
+.btn-size {
+  width: 200px;
+}
+/*IMAGE: END*/

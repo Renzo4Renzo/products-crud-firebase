@@ -1,4 +1,20 @@
-<div class="card mt-2" (ngSubmit)="onSave()" [formGroup]="productForm">
+<div class="card" *ngIf="savingProduct">
+  <div
+    class="card-body d-flex flex-column align-items-center loading-card-padding"
+  >
+    <p class="loading-p text-dark">Saving Product</p>
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">Saving...</span>
+    </div>
+  </div>
+</div>
+
+<div
+  class="card mt-2"
+  (ngSubmit)="onSave()"
+  [formGroup]="productForm"
+  *ngIf="!savingProduct"
+>
   <div class="card-header"><i class="bi bi-bag-plus"></i> Create Product</div>
   <div class="card-body">
     <form>
@@ -22,37 +38,43 @@
       </div>
 
       <!-- IMAGE -->
-      <!-- <div class="mb-3">
+      <div class="d-flex flex-column mb-3">
+        <label for="formFile" class="label-img mb-1"
+          >Image
+          <span class="label-cursive text-success">- Optional</span></label
+        >
         <img
-          src="../../../../assets/images/default.png"
-          class="img-border mx-auto d-block"
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          class="img-border d-block img-size"
           alt="No image"
-          width="260px"
-          formControlName="image"
         />
-        <div class="img-actions mx-auto">
+        <div
+          class="input-div show-input-div form-group"
+          [class]="imagePreview ? 'mt-2' : ''"
+        >
+          <input
+            #inputFile
+            class="form-control input-file"
+            type="file"
+            accept=".png,.jpg,.gif"
+            id="formFile"
+            formControlName="image"
+            (change)="onFileSelected($event)"
+          />
           <button
+            *ngIf="imagePreview"
             type="button"
-            class="btn btn-dark img-action-button"
-            data-bs-toggle="tooltip"
-            data-bs-placement="bottom"
-            title="Upload image"
-          >
-            <i class="bi bi-image me-1"></i>
-            UPLOAD
-          </button>
-          <button
-            type="button"
-            class="btn btn-dark img-action-button"
+            class="btn btn-dark delete-file"
             data-bs-toggle="tooltip"
             data-bs-placement="bottom"
             title="Delete image"
+            (click)="resetFile()"
           >
-            <i class="bi bi-trash me-1"></i>
-            DELETE
+            <i class="bi bi-trash"></i>
           </button>
         </div>
-      </div> -->
+      </div>
 
       <!-- DESCRIPTION -->
       <div class="form-floating mb-3">
@@ -109,10 +131,10 @@
           class="form-check-input"
           type="checkbox"
           role="switch"
-          id="switchActive"
+          id="switchActiveAdd"
           formControlName="active"
         />
-        <label class="form-check-label" for="switchActive">Active</label>
+        <label class="form-check-label" for="switchActiveAdd">Active</label>
       </div>
 
       <!-- BUTTONS -->

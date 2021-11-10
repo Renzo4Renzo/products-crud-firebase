@@ -16,6 +16,25 @@
         />
       </li> -->
       <li class="list-group-item info-item">
+        Image
+        <img
+          id="hiddenImage"
+          src="{{ product.image }}"
+          (load)="replaceSourceImg()"
+        />
+        <img
+          id="displayedImage"
+          *ngIf="product.image"
+          src="../../../../assets/images/loading2.gif"
+          class="img-border d-block my-1"
+          alt="No image"
+          width="200px"
+        />
+        <p class="info-p text-muted" *ngIf="!product.image">
+          No image available
+        </p>
+      </li>
+      <li class="list-group-item info-item">
         Description
         <p class="info-p" *ngIf="product.description">
           {{ product.description }}

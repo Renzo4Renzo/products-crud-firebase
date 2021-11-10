@@ -65,7 +65,7 @@
   <tbody>
     <tr
       class="table-secondary align-middle"
-      *ngFor="let item of productList"
+      *ngFor="let item of productList; let i = index"
       [ngClass]="!item.active ? 'disabled-product' : ''"
     >
       <th scope="row" class="td-padding">{{ item.title }}</th>
@@ -95,12 +95,26 @@
         <button
           type="button"
           class="btn btn-danger btn-md m-1 d-sm-table-cell d-none"
-          (click)="deleteProduct(item.id)"
+          (click)="onDelete(item, i)"
         >
-          <i class="bi bi-trash"></i>
+          <span
+            id="deleteSpinner{{ i }}"
+            class="spinner-border spinner-delete hide-component"
+            role="status"
+          ></span>
+          <i id="deleteIcon{{ i }}" class="bi bi-trash delete-icon-show"></i>
           Delete
         </button>
-        <div class="action-icons">
+        <span
+          id="deleteSpinnerR{{ i }}"
+          class="
+            spinner-border spinner-delete spinner-color
+            hide-component
+            d-sm-none
+          "
+          role="status"
+        ></span>
+        <div id="deleteDivR{{ i }}" class="action-icons delete-div-show">
           <i
             class="bi bi-info-circle info-btn d-sm-none d-table-cell"
             title="See Detail"
@@ -114,7 +128,7 @@
           <i
             class="bi bi-trash-fill danger-btn d-sm-none d-table-cell"
             title="Delete"
-            (click)="deleteProduct(item.id)"
+            (click)="onDelete(item, i)"
           ></i>
         </div>
       </td>

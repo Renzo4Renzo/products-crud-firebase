@@ -111,17 +111,36 @@ export class ProductListComponent implements OnInit {
     this.router.navigate(['product-edit'], this.navigationExtras);
   }
 
-  deleteProduct(productId: string) {
-    //console.log(productId);
+  onDelete(product: any, itemId: number) {
+    this.changeIcons(0, itemId);
+    if (product.image != undefined) {
+      this.productService
+        .deleteImage(product.image)
+        .then((res: any) => {
+          this.deleteProduct(product, itemId);
+        })
+        .catch((error) => {
+          this.showMessage(1, 'Your product was NOT deleted!', 'Error');
+          console.log('Error:', error); //For developers
+          this.changeIcons(1, itemId);
+        });
+    } else {
+      this.deleteProduct(product, itemId);
+    }
+  }
+
+  deleteProduct(product: any, itemId: number) {
     this.productService
-      .deleteProduct(productId)
+      .deleteProduct(product.id)
       .then((res: any) => {
         this.showMessage(0, 'Your product was deleted!', String(res));
+        this.changeIcons(1, itemId);
         this.updateProductList();
       })
       .catch((error) => {
         this.showMessage(1, 'Your product was NOT deleted!', 'Error');
         console.log('Error:', error); //For developers
+        this.changeIcons(1, itemId);
       });
   }
 
@@ -133,5 +152,31 @@ export class ProductListComponent implements OnInit {
     else if (type == 1) this.toastr.error(message, title, options);
     else if (type == 2) this.toastr.warning(message, title, options);
     else if (type == 3) this.toastr.info(message, title, options);
+  }
+
+  changeIcons(type: number, itemId: number) {
+    let deleteSpinner = <HTMLInputElement>(
+      document.getElementById('deleteSpinner' + itemId)
+    );
+    let deleteIcon = <HTMLInputElement>(
+      document.getElementById('deleteIcon' + itemId)
+    );
+    let deleteSpinnerR = <HTMLInputElement>(
+      document.getElementById('deleteSpinnerR' + itemId)
+    );
+    let deleteDivR = <HTMLInputElement>(
+      document.getElementById('deleteDivR' + itemId)
+    );
+    if (type == 0) {
+      deleteSpinner.classList.replace('hide-component', 'delete-icon-show');
+      deleteSpinnerR.classList.replace('hide-component', 'delete-icon-show');
+      deleteIcon.classList.replace('delete-icon-show', 'hide-component');
+      deleteDivR.classList.replace('delete-div-show', 'hide-component');
+    } else if (type == 1) {
+      deleteSpinner.classList.replace('delete-icon-show', 'hide-component');
+      deleteSpinnerR.classList.replace('delete-icon-show', 'hide-component');
+      deleteIcon.classList.replace('hide-component', 'delete-icon-show');
+      deleteDivR.classList.replace('hide-component', 'delete-div-show');
+    }
   }
 }

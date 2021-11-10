@@ -39,11 +39,12 @@ export class ProductInfoComponent implements OnInit {
     this.router.navigate(['product-edit'], this.navigationExtras);
   }
 
-  deleteProduct() {
+  returnToList() {
     this.router.navigate(['product-list']);
   }
 
-  returnToList() {
-    this.router.navigate(['product-list']);
+  replaceSourceImg() {
+    (document.getElementById('displayedImage') as HTMLImageElement).src =
+      this.product.image;
   }
 }
