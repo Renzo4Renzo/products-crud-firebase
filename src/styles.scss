@@ -23,6 +23,10 @@ textarea {
 .hide-component {
   display: none !important;
 }
+
+.show-feedback {
+  display: block;
+}
 /* GENERAL: END */
 
 /* ICON BUTTON: START */
@@ -92,9 +96,14 @@ textarea {
 /*TOGGLE DELETE BUTTON: END*/
 
 /*IMAGE: START*/
-.input-div {
+/* .input-div {
   text-align: center;
+} */
+
+.inner-input-div {
+  width: 100%;
 }
+
 .show-input-div {
   display: flex;
 }
@@ -109,6 +118,7 @@ textarea {
 
 .delete-file {
   padding: 11px 16px;
+  height: 48px;
 }
 
 .img-border {

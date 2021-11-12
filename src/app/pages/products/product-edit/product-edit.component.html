@@ -26,7 +26,7 @@
           id="titleInput"
           autocomplete="off"
           formControlName="title"
-          [class]="isValidField('title')"
+          [class]="fieldValidator.isValidField('title', productForm)"
         />
         <label for="titleInput">Product</label>
         <div
@@ -50,7 +50,9 @@
           <img
             id="hiddenImageEdit"
             src="{{ product.image }}"
-            (load)="replaceSourceImg()"
+            (load)="
+              productUtilities.replaceSourceImg(product, 'displayedImageEdit')
+            "
           />
           <img
             id="displayedImageEdit"
@@ -81,20 +83,23 @@
 
         <div
           id="inputImageDiv"
-          class="input-div hide-input-div form-group"
+          class="form-group hide-input-div"
           [class]="!product.image || oldImageHidden ? showInputDiv() : ''"
         >
-          <input
-            #inputFile
-            class="form-control input-file"
-            type="file"
-            accept=".png,.jpg,.gif"
-            id="formFile"
-            formControlName="image"
-            (change)="onFileSelected($event)"
-          />
+          <div class="inner-input-div">
+            <input
+              #inputFile
+              class="form-control input-file"
+              type="file"
+              accept=".png,.jpg,.jpeg,.gif"
+              id="formFile"
+              formControlName="image"
+              [class]="fieldValidator.isValidField('image', productForm)"
+              (change)="onFileSelected($event)"
+            />
+          </div>
           <button
-            *ngIf="imagePreview"
+            *ngIf="this.selectedFile"
             type="button"
             class="btn btn-dark delete-file"
             data-bs-toggle="tooltip"
@@ -105,6 +110,18 @@
             <i class="bi bi-trash"></i>
           </button>
         </div>
+        <div
+          class="invalid-feedback show-feedback"
+          *ngIf="productForm.get('image')?.errors?.size == false"
+        >
+          Maximum File Size allowed is 1MB.
+        </div>
+        <div
+          class="invalid-feedback show-feedback"
+          *ngIf="productForm.get('image')?.errors?.type == false"
+        >
+          File Types allowed are: .png, .jpg, .jpeg, .gif.
+        </div>
       </div>
 
       <!-- DESCRIPTION -->
@@ -114,7 +131,7 @@
           id="descriptionArea"
           style="height: 150px"
           formControlName="description"
-          [class]="isValidField('description')"
+          [class]="fieldValidator.isValidField('description', productForm)"
         ></textarea>
         <label for="descriptionArea"
           >Description
@@ -129,11 +146,11 @@
           type="number"
           min="0.01"
           step="0.01"
-          pattern="[0-9]+([.][0-9]{1,2}|[0-9]?)"
+          (keydown)="inputUtilities.allowKeyDown($event)"
           class="form-control"
           autocomplete="off"
           formControlName="price"
-          [class]="isValidField('price')"
+          [class]="fieldValidator.isValidField('price', productForm)"
           value="{{ product.price | number: '1.2-2' }}"
         />
         <label for="priceInput">Price (PEN)</label>
@@ -209,7 +226,11 @@
           <span class="d-sm-inline-block d-none">Delete Product</span>
           <span class="d-sm-none d-inline-block">Delete</span>
         </button>
-        <button type="button" class="btn btn-dark" (click)="returnToList()">
+        <button
+          type="button"
+          class="btn btn-dark"
+          (click)="productUtilities.returnToList()"
+        >
           <i class="bi bi-box-arrow-left me-md-1 btn-margin-right"></i>
           <span class="d-sm-inline-block d-none">Back to List</span>
           <span class="d-sm-none d-inline-block">Back</span>

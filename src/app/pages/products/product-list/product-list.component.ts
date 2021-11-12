@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { Product } from 'src/app/models/product.interface';
 import { ProductsService } from '../products.service';
-
 import { Global } from 'src/app/common/global';
-import { ToastrService } from 'ngx-toastr';
+import { UserMessage } from 'src/app/common/user-message';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
+  providers: [UserMessage],
 })
 export class ProductListComponent implements OnInit {
   navigationExtras: NavigationExtras = {
@@ -25,7 +24,7 @@ export class ProductListComponent implements OnInit {
   constructor(
     private router: Router,
     private productService: ProductsService,
-    private toastr: ToastrService
+    private userMessage: UserMessage
   ) {}
 
   ngOnInit(): void {
@@ -87,7 +86,11 @@ export class ProductListComponent implements OnInit {
         this.loadingList = false;
       })
       .catch((error) => {
-        this.showMessage(1, "Couldn't retrieve product list!", 'Error');
+        this.userMessage.showMessage(
+          1,
+          "Couldn't retrieve product list!",
+          'Error'
+        );
         console.log('Error:', error); //For developers
         this.loadingList = false;
       });
@@ -113,14 +116,18 @@ export class ProductListComponent implements OnInit {
 
   onDelete(product: any, itemId: number) {
     this.changeIcons(0, itemId);
-    if (product.image != undefined) {
+    if (product.image) {
       this.productService
         .deleteImage(product.image)
         .then((res: any) => {
           this.deleteProduct(product, itemId);
         })
         .catch((error) => {
-          this.showMessage(1, 'Your product was NOT deleted!', 'Error');
+          this.userMessage.showMessage(
+            1,
+            'Your product was NOT deleted!',
+            'Error'
+          );
           console.log('Error:', error); //For developers
           this.changeIcons(1, itemId);
         });
@@ -133,25 +140,23 @@ export class ProductListComponent implements OnInit {
     this.productService
       .deleteProduct(product.id)
       .then((res: any) => {
-        this.showMessage(0, 'Your product was deleted!', String(res));
+        this.userMessage.showMessage(
+          0,
+          'Your product was deleted!',
+          String(res)
+        );
         this.changeIcons(1, itemId);
         this.updateProductList();
       })
       .catch((error) => {
-        this.showMessage(1, 'Your product was NOT deleted!', 'Error');
+        this.userMessage.showMessage(
+          1,
+          'Your product was NOT deleted!',
+          'Error'
+        );
         console.log('Error:', error); //For developers
         this.changeIcons(1, itemId);
       });
-  }
-
-  showMessage(type: number, message: string, title: string) {
-    var options = {
-      closeButton: true,
-    };
-    if (type == 0) this.toastr.success(message, title, options);
-    else if (type == 1) this.toastr.error(message, title, options);
-    else if (type == 2) this.toastr.warning(message, title, options);
-    else if (type == 3) this.toastr.info(message, title, options);
   }
 
   changeIcons(type: number, itemId: number) {
