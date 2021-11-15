@@ -145,7 +145,9 @@ export class ProductEditComponent implements OnInit {
           this.deleteImage(this.product);
           this.productForm.value.image = '';
         } else {
-          this.productForm.value.image = this.product.image;
+          if (this.product.image) {
+            this.productForm.value.image = this.product.image;
+          } else this.productForm.value.image = '';
         }
         this.updateProduct();
       }
@@ -167,6 +169,7 @@ export class ProductEditComponent implements OnInit {
       type: 'u',
     });
     let history = this.product.history;
+    this.productForm.value.title = this.productForm.value.title.toUpperCase();
     let product = { history, ...this.productForm.value };
     this.productService
       .updateProduct(product, this.product.id)

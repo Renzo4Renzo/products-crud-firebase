@@ -30,6 +30,7 @@ export class UserLoginComponent implements OnInit {
     private session: Session
   ) {
     this.initForm();
+    if (session.getSession()) this.router.navigate(['product-list']);
   }
 
   ngOnInit(): void {}

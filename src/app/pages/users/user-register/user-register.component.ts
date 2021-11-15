@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { FieldValidator } from 'src/app/common/field-validator';
+import { Session } from 'src/app/common/session';
 import { UserMessage } from 'src/app/common/user-message';
 import {
   usernameExistsValidator,
@@ -14,7 +15,7 @@ import { UserService } from '../user.service';
   selector: 'app-user-register',
   templateUrl: './user-register.component.html',
   styleUrls: ['./user-register.component.scss'],
-  providers: [UserValidator, FieldValidator, UserMessage],
+  providers: [UserValidator, FieldValidator, UserMessage, Session],
 })
 export class UserRegisterComponent implements OnInit {
   userForm!: FormGroup;
@@ -29,9 +30,11 @@ export class UserRegisterComponent implements OnInit {
     private userService: UserService,
     private userValidator: UserValidator,
     public fieldValidator: FieldValidator,
-    private userMessage: UserMessage
+    private userMessage: UserMessage,
+    private session: Session
   ) {
     this.initForm();
+    if (session.getSession()) this.router.navigate(['product-list']);
   }
 
   private initForm(): void {
