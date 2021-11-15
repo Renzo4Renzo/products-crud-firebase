@@ -54,7 +54,7 @@ export class UserLoginComponent implements OnInit {
   onLogin() {
     if (this.userForm.valid) {
       this.checkingUser = true;
-      console.log(this.userForm.value);
+      //console.log(this.userForm.value);
       this.userService
         .getUser(this.userForm.value.username, this.userForm.value.password)
         .then((res: any) => {

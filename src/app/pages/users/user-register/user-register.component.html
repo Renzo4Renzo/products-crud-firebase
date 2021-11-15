@@ -1,4 +1,4 @@
-<div class="card mb-5" *ngIf="savingUser">
+<div class="card register-margin mb-5" *ngIf="savingUser">
   <div
     class="card-body d-flex flex-column align-items-center loading-card-padding"
   >
@@ -10,7 +10,7 @@
 </div>
 
 <div
-  class="card mb-5"
+  class="card register-margin mb-5"
   (ngSubmit)="onSave()"
   [formGroup]="userForm"
   *ngIf="!savingUser"

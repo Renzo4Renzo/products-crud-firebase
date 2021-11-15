@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from 'src/app/models/product.interface';
 
-import { initializeApp } from 'firebase/app';
-
 import {
-  getFirestore,
+  Firestore,
   collection,
   query,
   where,
@@ -13,19 +11,14 @@ import {
   setDoc,
   deleteDoc,
   doc,
-} from 'firebase/firestore';
-import { environment } from 'src/environments/environment';
+} from '@angular/fire/firestore';
 import {
-  getStorage,
+  Storage,
   ref,
   uploadBytes,
   deleteObject,
   getDownloadURL,
-} from 'firebase/storage';
-
-const firebaseApp = initializeApp(environment.firebase);
-const firestore = getFirestore();
-const storage = getStorage(firebaseApp);
+} from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -33,14 +26,14 @@ const storage = getStorage(firebaseApp);
 export class ProductsService {
   productList!: Observable<Product[]>;
 
-  constructor() {}
+  constructor(public firestore: Firestore, public storage: Storage) {}
 
   getProducts(type: number) {
     if (type == 1) {
       //Gets ALL Products
       return new Promise(async (resolve, reject) => {
         try {
-          let getProductQuery = query(collection(firestore, 'products'));
+          let getProductQuery = query(collection(this.firestore, 'products'));
           const querySnapshot = await getDocs(getProductQuery);
           resolve(querySnapshot);
         } catch (error: any) {
@@ -52,7 +45,7 @@ export class ProductsService {
       return new Promise(async (resolve, reject) => {
         try {
           let getProductQuery = query(
-            collection(firestore, 'products'),
+            collection(this.firestore, 'products'),
             where('active', '==', true)
           );
           const querySnapshot = await getDocs(getProductQuery);
@@ -67,7 +60,7 @@ export class ProductsService {
   saveProduct(product: Product) {
     return new Promise(async (resolve, reject) => {
       try {
-        const productReference = doc(collection(firestore, 'products'));
+        const productReference = doc(collection(this.firestore, 'products'));
         await setDoc(productReference, product);
         resolve('Saved successfully!');
       } catch (error: any) {
@@ -79,7 +72,7 @@ export class ProductsService {
   updateProduct(product: Product, productId: string) {
     return new Promise(async (resolve, reject) => {
       try {
-        await setDoc(doc(firestore, 'products', productId), product);
+        await setDoc(doc(this.firestore, 'products', productId), product);
         resolve('Updated successfully!');
       } catch (error: any) {
         reject(error.message);
@@ -90,7 +83,7 @@ export class ProductsService {
   deleteProduct(productId: string) {
     return new Promise(async (resolve, reject) => {
       try {
-        await deleteDoc(doc(firestore, 'products', productId));
+        await deleteDoc(doc(this.firestore, 'products', productId));
         resolve('Deleted successfully!');
       } catch (error: any) {
         reject(error.message);
@@ -100,7 +93,7 @@ export class ProductsService {
 
   uploadImage(fileName: string, imgBase64: any) {
     return new Promise(async (resolve, reject) => {
-      const storageRef = ref(storage, 'images/' + fileName);
+      const storageRef = ref(this.storage, 'images/' + fileName);
       uploadBytes(storageRef, imgBase64)
         .then((snapshot) => {
           //console.log('Image uploaded successfully!');
@@ -121,7 +114,7 @@ export class ProductsService {
 
   deleteImage(filePath: string) {
     return new Promise(async (resolve, reject) => {
-      const storageRef = ref(storage, filePath);
+      const storageRef = ref(this.storage, filePath);
       deleteObject(storageRef)
         .then(() => {
           resolve('File deleted succesfully!');

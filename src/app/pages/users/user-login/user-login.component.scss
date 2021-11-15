@@ -1,12 +1,23 @@
 .login-container {
-  max-width: 800px;
+  max-width: 600px;
   min-height: 440px;
   height: calc(100vh - 20rem);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 30px;
+  border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.8);
+}
+@media (max-width: 620px) {
+  .login-container {
+    margin: 0 2rem !important;
+  }
+}
+@media (max-width: 375px) {
+  .login-container {
+    border-radius: 10px;
+    margin: 0 0.5rem !important;
+  }
 }
 .loading-login-background {
   background-color: rgba(255, 255, 255, 0);
