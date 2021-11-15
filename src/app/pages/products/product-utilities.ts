@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Product } from 'src/app/models/product.interface';
-import { ImageReader } from 'src/app/common/image-reader';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductUtilities {
-  constructor(private router: Router, private imageReader: ImageReader) {}
+  constructor(private router: Router) {}
 
   returnToList() {
     this.router.navigate(['product-list']);

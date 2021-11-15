@@ -1,0 +1,115 @@
+<div class="login-container mx-auto my-auto">
+  <div class="card border-0 loading-login-background" *ngIf="checkingUser">
+    <div
+      class="
+        card-body
+        d-flex
+        flex-column
+        align-items-center
+        loading-card-padding
+      "
+    >
+      <p class="loading-p text-dark">Trying to login</p>
+      <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Log in...</span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="login-div mx-auto"
+    (ngSubmit)="onLogin()"
+    [formGroup]="userForm"
+    *ngIf="!checkingUser"
+  >
+    <!-- LOGO -->
+    <div class="d-flex my-3">
+      <img
+        src="../../../../assets/images/squish.png"
+        width="250px"
+        class="logo-width mx-auto"
+      />
+    </div>
+
+    <form>
+      <!-- USERNAME -->
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control lowercase-text"
+          id="usernameInput"
+          autocomplete="off"
+          formControlName="username"
+          [class]="fieldValidator.isValidField('username', userForm)"
+        />
+        <label for="userInput">Username</label>
+        <div
+          class="invalid-feedback"
+          *ngIf="userForm.get('username')?.errors?.required"
+        >
+          This field is required.
+        </div>
+        <div
+          class="invalid-feedback"
+          *ngIf="userForm.get('username')?.errors?.minlength"
+        >
+          Username must have at least 6 characters.
+        </div>
+        <div
+          class="invalid-feedback"
+          *ngIf="userForm.get('username')?.errors?.pattern"
+        >
+          Username must be an alphanumeric value with no whitespaces.
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="form-floating mb-3">
+        <input
+          type="password"
+          class="form-control"
+          id="passwordInput"
+          autocomplete="off"
+          formControlName="password"
+          [class]="fieldValidator.isValidField('password', userForm)"
+        />
+        <label for="passwordInput">Password</label>
+        <div
+          class="invalid-feedback"
+          *ngIf="userForm.get('password')?.errors?.required"
+        >
+          This field is required.
+        </div>
+        <div
+          class="invalid-feedback"
+          *ngIf="userForm.get('password')?.errors?.minlength"
+        >
+          Password must have at least 6 characters.
+        </div>
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="btn-group">
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="!userForm.valid"
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          title="Save User"
+        >
+          <i class="bi bi-box-arrow-right me-1"></i>
+          <span>Login</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- REGISTER LINK -->
+    <div class="d-flex mt-3">
+      <p class="mx-auto register-text">
+        Don't have an account?
+        <a class="text-info" [routerLink]="['/register']">Register Here</a>
+      </p>
+    </div>
+  </div>
+</div>

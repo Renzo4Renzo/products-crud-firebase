@@ -2,6 +2,7 @@ import { formatNumber } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { Product } from 'src/app/models/product.interface';
 import { ProductsService } from '../products.service';
 import { ImageReader } from '../../../common/image-reader';
@@ -10,6 +11,7 @@ import { FieldValidator } from 'src/app/common/field-validator';
 import { UserMessage } from 'src/app/common/user-message';
 import { ProductUtilities } from '../product-utilities';
 import { InputUtilities } from 'src/app/common/input-utilities';
+import { Session } from 'src/app/common/session';
 
 @Component({
   selector: 'app-product-edit',
@@ -22,6 +24,7 @@ import { InputUtilities } from 'src/app/common/input-utilities';
     UserMessage,
     ProductUtilities,
     InputUtilities,
+    Session,
   ],
 })
 export class ProductEditComponent implements OnInit {
@@ -48,8 +51,10 @@ export class ProductEditComponent implements OnInit {
     public fieldValidator: FieldValidator,
     private userMessage: UserMessage,
     public productUtilities: ProductUtilities,
-    public inputUtilities: InputUtilities
+    public inputUtilities: InputUtilities,
+    private session: Session
   ) {
+    if (!session.getSession()) this.router.navigate(['login']);
     const navigation = this.router.getCurrentNavigation();
     this.product = navigation?.extras?.state?.product;
     //console.log('this.product: ', this.product);
@@ -157,7 +162,7 @@ export class ProductEditComponent implements OnInit {
 
   updateProduct() {
     this.product.history.push({
-      user: 'admin',
+      user: this.session.getSession()!,
       date: String(Date.now()),
       type: 'u',
     });

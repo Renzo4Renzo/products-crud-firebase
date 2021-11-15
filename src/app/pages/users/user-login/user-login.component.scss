@@ -1,0 +1,28 @@
+.login-container {
+  max-width: 800px;
+  min-height: 440px;
+  height: calc(100vh - 20rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.loading-login-background {
+  background-color: rgba(255, 255, 255, 0);
+}
+.login-div {
+  max-width: 400px;
+}
+.logo-width {
+  width: 250px;
+}
+@media (max-width: 575px) {
+  .logo-width {
+    width: 200px;
+  }
+}
+
+.register-text {
+  font-size: 14px;
+}

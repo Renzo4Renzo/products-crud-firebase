@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+
 import { Product } from 'src/app/models/product.interface';
 import { ProductsService } from '../products.service';
 import { Global } from 'src/app/common/global';
 import { UserMessage } from 'src/app/common/user-message';
+import { Session } from 'src/app/common/session';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
-  providers: [UserMessage],
+  providers: [UserMessage, Session],
 })
 export class ProductListComponent implements OnInit {
   navigationExtras: NavigationExtras = {
@@ -24,8 +26,11 @@ export class ProductListComponent implements OnInit {
   constructor(
     private router: Router,
     private productService: ProductsService,
-    private userMessage: UserMessage
-  ) {}
+    private userMessage: UserMessage,
+    private session: Session
+  ) {
+    if (!session.getSession()) this.router.navigate(['login']);
+  }
 
   ngOnInit(): void {
     (<HTMLInputElement>document.getElementById('switchActive')).checked =
@@ -62,7 +67,6 @@ export class ProductListComponent implements OnInit {
       .then((res: any) => {
         var preList: Array<Product> = [];
         res.forEach((doc: any) => {
-          //console.log(doc.data());
           let id = doc.id;
           if (doSearch) {
             let docData = doc.data().title;

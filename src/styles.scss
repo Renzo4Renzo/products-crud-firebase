@@ -7,6 +7,21 @@
 @import "~ngx-toastr/toastr";
 
 /* GENERAL: START */
+body {
+  background-image: url("./assets/images/supermarket.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1000px rgba(0, 0, 0, 0.5);
+}
+
+.big-height {
+  height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .label-cursive {
   font-weight: bold;
   font-style: italic;
@@ -18,6 +33,10 @@ textarea {
 
 .uppercase-text {
   text-transform: uppercase;
+}
+
+.lowercase-text {
+  text-transform: lowercase;
 }
 
 .hide-component {

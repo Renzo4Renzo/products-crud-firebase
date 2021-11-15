@@ -5,8 +5,8 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./pages/products/product-list/product-list.module').then(
-        (m) => m.ProductListModule
+      import('./pages/users/user-login/user-login.module').then(
+        (m) => m.UserLoginModule
       ),
   },
   {
@@ -35,6 +35,34 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/products/product-edit/product-edit.module').then(
         (m) => m.ProductEditModule
+      ),
+  },
+  {
+    path: 'product-edit',
+    loadChildren: () =>
+      import('./pages/products/product-edit/product-edit.module').then(
+        (m) => m.ProductEditModule
+      ),
+  },
+  {
+    path: 'register',
+    loadChildren: () =>
+      import('./pages/users/user-register/user-register.module').then(
+        (m) => m.UserRegisterModule
+      ),
+  },
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./pages/users/user-login/user-login.module').then(
+        (m) => m.UserLoginModule
+      ),
+  },
+  {
+    path: '**',
+    loadChildren: () =>
+      import('./pages/users/user-login/user-login.module').then(
+        (m) => m.UserLoginModule
       ),
   },
 ];

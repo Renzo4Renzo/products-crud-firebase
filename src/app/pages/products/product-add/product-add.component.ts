@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { ProductsService } from '../products.service';
 import { ImageReader } from '../../../common/image-reader';
 import { FileValidator } from 'src/app/common/file-validator';
@@ -8,6 +9,7 @@ import { FieldValidator } from 'src/app/common/field-validator';
 import { UserMessage } from 'src/app/common/user-message';
 import { ProductUtilities } from '../product-utilities';
 import { InputUtilities } from 'src/app/common/input-utilities';
+import { Session } from 'src/app/common/session';
 
 @Component({
   selector: 'app-product-add',
@@ -20,6 +22,7 @@ import { InputUtilities } from 'src/app/common/input-utilities';
     UserMessage,
     ProductUtilities,
     InputUtilities,
+    Session,
   ],
 })
 export class ProductAddComponent implements OnInit {
@@ -45,8 +48,10 @@ export class ProductAddComponent implements OnInit {
     public fieldValidator: FieldValidator,
     private userMessage: UserMessage,
     public productUtilities: ProductUtilities,
-    public inputUtilities: InputUtilities
+    public inputUtilities: InputUtilities,
+    private session: Session
   ) {
+    if (!session.getSession()) this.router.navigate(['login']);
     this.initForm();
   }
 
@@ -118,7 +123,7 @@ export class ProductAddComponent implements OnInit {
   private saveProduct() {
     let history = [
       {
-        user: 'admin',
+        user: this.session.getSession(),
         date: Date.now(),
         type: 'c',
       },
